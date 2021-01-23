@@ -1,0 +1,803 @@
+示例32、百钱买百鸡问题：鸡翁一值钱五，鸡母一值钱三，鸡雏三值钱一，百钱买百鸡，问鸡翁、母、雏各几何？
+方法1 穷举法（暴力法）
+#include<stdio.h>
+int main() {
+  int cock, hen, chick;
+  for (cock = 0; cock <= 20; cock++)	
+    for (hen = 0; hen <= 33; hen++)
+      for (chick = 0; chick <= 100; chick++)
+        if (cock + hen + chick == 100 && 5*cock + 3*hen + chick/3.0 == 100)
+          printf("%d %d %d\n", cock, hen, chick);
+}
+√
+
+方法2 改进的穷举法
+#include<stdio.h>
+int main() {
+  int cock, hen, chick;
+  for (cock = 0; cock <= 20; cock++)	
+    for (hen = 0; hen <= 33; hen++) {
+      chick = 100 - cock - hen;
+      if (5*cock + 3*hen + chick/3.0 == 100)
+        printf("%d %d %d\n", cock, hen, chick);
+    }
+}
+√
+
+示例33、鸡兔同笼，输入鸡和兔的总数量m，总腿数n，输出鸡和兔的数目。
+方法1 暴力法
+#include<stdio.h>
+int main() {
+  int m, n, x, y, flag = 0; //x、y分别代表鸡和兔的个数 
+  scanf("%d%d", &m, &n);
+  for (x = 0; x <= m; x++) {
+    for (y = 0; y <= m; y++)
+      if (x + y == m && 2 * x + 4 * y == n) {
+        flag = 1;
+        goto abc;
+      }
+  }
+abc:
+  if (flag == 1) 
+    printf("%d %d\n", x, y);
+  else
+    printf("无解\n");
+}
+√
+
+方法2 改进的暴力法
+#include<stdio.h>
+int main() {
+  int m, n, x, y, flag = 0; //x、y分别代表鸡和兔的个数 
+  scanf("%d%d", &m, &n);
+  for (x = 0; x <= m; x++) {
+    y = m - x;
+    if (2 * x + 4 * y == n) {
+      flag = 1;
+      break;
+    }    
+  }	
+  if (flag == 1) 
+    printf("%d %d\n", x, y);
+  else
+    printf("无解\n");
+}
+√
+
+方法3 解方程
+#include<stdio.h>
+int main() { 
+  int m, n, x, y;
+  scanf("%d%d", &m, &n);
+//先把所有动物当鸡，算出鸡的腿数，用总腿数减鸡腿，剩下的腿为兔子多出的，只要用剩下的腿除2即为一只兔子。
+  y = (n - 2 * m) / 2;
+  x = m - y;
+  if (n % 2 == 0 && x >= 0 && y >= 0)
+    printf("%d %d", x, y);
+}
+√
+
+刷题19、鸡兔同笼
+√
+
+示例34、牛顿迭代法求n的平方根
+
+函数 f(x) = x^2 - n，求 f(x) = 0 的根。 
+f'(x0) = f(x0) / (x0 - x1)   ==>   x1 = x0 - f(x0) / f'(x0)
+代入f(x) = x^2 - n，得到 
+牛顿迭代公式：
+x1 =  (x0 + n/x0) / 2
+
+#include<stdio.h>
+double sqrt(int n) {
+  double x0, x = n;
+  do {
+    x0 = x;
+    x = (x0 + n / x0) / 2;
+//算出的Xn和X（n+1）的差的绝对值小于某个值，即认为找到了精确的平方根。
+  } while (x0 - x > 1e-16);
+  return x;
+}
+int main() {
+  int n;
+  while (scanf("%d", &n), n)
+    printf("%.15f\n", sqrt(n));	  
+}
+√
+
+示例35、编程序，求方程 ax^2 + bx + c = 0 的根
+#include<stdio.h>
+#include<math.h>
+int main() {
+  double a, b, c, d, x1, x2;
+  scanf("%lf%lf%lf", &a, &b, &c);
+  if (a == 0) {
+    if (b == 0)
+      printf ("错误\n");
+    else 
+      printf ("x=%f\n", -c/b);
+  } else {
+    d = b * b - 4 * a * c;
+    if (fabs(d) <= 1e-6) {
+      printf ("x1=x2=%f\n", -b/(2*a));
+    } else if (d > 1e-6) {
+      x1 = (-b + sqrt(d)) / (2 * a);
+      x2 = (-b - sqrt(d)) / (2 * a);
+      printf ("x1=%f, x2=%f\n", x1, x2);
+    } else {
+      printf ("方程无实根\n");
+    }
+  }
+}
+√
+
+示例36、写一函数，在一个数组中找出最大元素的位置
+#include<stdio.h>
+const int N = 10;
+int SearchMax(int a[], int n){
+  int k = 0;
+  for (int i = 1; i < n; i++)
+    if (a[i] > a[k]) k = i;
+  return k;
+}
+int main() {
+  int a[N];
+  for (int i = 0; i < N; i++) scanf("%d", &a[i]);
+  printf("最大值在第%d位\n", SearchMax(a, N) + 1); 
+} 
+√
+
+练习36、写一函数，在一个数组中得到最大元素的值
+√
+
+示例37、在一个数组中查找一个数
+#include<stdio.h>
+const int N = 10;
+int Search(int a[], int n, int x){
+  for (int i = 0; i < n; i++)
+    if (a[i] == x) return i; 
+  return -1; 
+}
+int main() {
+  int a[N], d;
+  for (int i = 0; i < N; i++) scanf("%d", &a[i]);
+  printf("请输入你要找的数："); 
+  scanf("%d", &d); 
+  int k = Search(a, N, d); 
+  if (k == -1)
+    printf("没有你要找的数\n");  
+  else 
+    printf("你要找的数在第%d位\n", k + 1); 
+} 
+√
+
+示例38、折半查找
+//binary二元，二进制的
+int BinarySearch(int a[], int n, int key){ 
+  int low = 0, high = n-1, middle;  
+  while (low <= high) {
+    middle = (low + high) / 2;
+    if (a[middle] == x) return middle;
+    else if (a[middle] > x) high = middle - 1;
+    else low = middle + 1;
+  }
+  return -1;
+}
+√
+
+示例39、输入一个年月日，计算该日在这一年中是第几天
+#include<stdio.h>
+int LeapYear(int y) {
+  return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+}
+int main() {
+  int year, month, day, s = 0;
+  int a[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  scanf("%d%d%d", &year, &month, &day);
+  for (int i = 1; i < month; i++)
+    s += a[i];
+  s += day;
+  if (LeapYear(year) && month > 2) s++;
+  printf("%d", s);
+} 
+√
+
+刷题20、日期计算
+√
+
+练习37、输入一个年月日，计算该日从公元1年开始是第几天
+√
+
+示例40、写一个函数，对给定的年月日，求该日从公元1年开始是第几天。
+#include<stdio.h>
+int LeapYear(int y) {
+  return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+}
+int DatetoInt(int year, int month, int day) {  
+  int a[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  int s = 0, k = year - 1;
+  for (int i = 1; i < month; i++) s += a[i];
+  if (LeapYear(year) && month > 2) s++; 
+  s += day;
+  s += k * 365 + k / 4 - k / 100 + k / 400;
+  return s;
+}
+int main() {
+  int year, month, day;
+  scanf("%d%d%d", &year, &month, &day);
+  printf("%d", DatetoInt(year, month, day));
+}
+√
+
+练习38、输入两个年月日，计算这两个日期相差多少天
+√
+
+练习39、写一个函数，对一个年月日，求该日是星期几（用0代表星期日）
+√
+
+练习40、输入一个整数代表今年起的第几天，求这个整数对应的月日
+√
+
+示例41、输入一个整数代表公元1年起的第几天，求这个整数对应的年月日
+#include<stdio.h>
+int LeapYear(int y) {
+  return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+}
+int main() {
+  int a[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  int s;
+  scanf("%d", &s);
+//?后为取值，：后为不取值。
+//第一次判断是否闰年天数
+  int y = 1, days = LeapYear(y) ? 366 : 365;  
+//减一年天数，年数+1
+  while (s > days) {
+    s -= days;
+    y++;
+//循环判断接下来每年是否闰年天数
+    days = LeapYear(y) ? 366 : 365;
+  }
+  if (LeapYear(y)) a[2] = 29;
+  int m = 1;
+//减每月天数计算哪个月，大于月数月份则+1
+  while (s > a[m]) {
+    s -= a[m];
+    m++;
+  }
+//s为减去总年和总月的天数剩下的日期，则为日。
+  printf("%d %d %d", y, m, s);
+}
+√
+
+练习41、输入一个日期和一个整数n，求这个日期过了n天后是什么日期
+//将日期转为天数，再加n，转换总天数，然后再由示例41可得年月日。
+√
+
+示例42、输入一个年月日，打印这个月的月历
+#include<stdio.h>
+int LeapYear(int y) {
+  return (y%4 == 0 && y%100 != 0) || (y%400 == 0);
+}
+//将年月日转换为天数
+int DatetoInt(int year, int month, int day) {  
+  int a[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  int s = 0, k = year - 1;
+  for (int i = 1; i < month; i++) s += a[i];
+  if (LeapYear(year) && month > 2) s++; 
+  s += day;
+  s += k * 365 + k / 4 - k / 100 + k / 400;
+  return s;
+}
+//算出星期几
+int DayOfWeek(int year, int month, int day) {
+  return DatetoInt(year, month, day) % 7;
+}
+int main() {
+  int year, month;
+  int MonthDay[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+//录入所要年份月份
+  scanf("%d%d", &year, &month);
+  printf("%18d年%d月\n\n", year, month);
+  printf("   日   一   二   三   四   五   六\n");
+//算出本月第一天星期几
+  int firstday = DayOfWeek(year, month, 1);
+//根据第一天星期几来排出第一行的空格占用位置。 
+  for (int i = 0; i < firstday; i++) printf("     ");
+//算出每月多少天
+  int sumday = MonthDay[month];
+//闰年二月+1
+  if(LeapYear(year) && month == 2) sumday++;
+//输出1-最后一天的日期  
+for(int i = 1; i <= sumday; i++) {
+    printf("%5d", i);
+/*firstday是变量，第一行要的i数量为7-firstday，
+其他除最后一行都需要7个。
+例：某年某月1日为星期一，则第一行填满需要6个，i=6,6+1%7=0；
+第二行7个，最后一个为i=13，13+1%7=0;
+以此类推。
+*/
+    if ((i + firstday) % 7 == 0 ) printf("\n");
+  }
+}
+√
+
+示例43、矩阵相乘
+#include<stdio.h>
+//矩阵相乘的条件：前一个矩阵的行数要等于后一个矩阵的列数。
+const int N = 3, P = 4, M = 2; 
+int main() {
+//二维数组前[]为矩阵的行，后[]为矩阵的列。
+  int a[N][P] = {{4, -1, 2, 1}, {1, 1, 0, 3}, {0, 3, 1, 4}},
+      b[P][M] = {{1, 2}, {0, 1}, {3, 0}, {-1, 2}}, c[N][M] = {0};
+//计算两矩阵对应行列对应元素积的结果
+  for (int i = 0; i < N; i++)
+    for (int j = 0; j < M; j++)
+      for (int k = 0; k < P; k++)
+        c[i][j] += a[i][k] * b[k][j];
+//此时i，j控制打印出来的表格行列。
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < M; j++) 
+      printf("%3d", c[i][j]);
+    printf("\n");
+  }
+}
+√
+
+刷题21、求转置矩阵问题
+√
+//打印时ij交换，注意格式问题
+
+刷题22、A*B Problem II
+√
+
+示例44、写一个函数，将一个整数的各位数字的反序打印
+方法1
+void show1(int n) {
+  while (n) {
+    printf("%d ", n % 10);
+    n /= 10;
+  };
+}
+√
+
+方法2
+void show2(int n) {
+  printf("%d ", n % 10);
+  show1(n/10);
+}
+√
+
+方法3
+void show3(int n) {
+//递归跳出的条件
+  if (n > 0) {
+    printf("%d ", n % 10);
+    show3(n / 10);
+  }
+}
+√
+
+或
+void show(int n) {
+  if (n < 10) {
+    printf("%d", n);
+  } else {
+    printf("%d ", n % 10);
+    show(n / 10);
+  }
+}
+
+int main() {
+  int n;
+//"~" = "!=EOF"
+  while (~scanf("%d", &n)) {
+    show(n);
+    printf("\n");
+  }
+}
+√
+
+练习42、写一个求一个整数的各位数之和的函数（用循环和递归两种方法）
+√
+
+练习43、写一个函数，取一个整数值并返回将此整数的各数字反序的数值。如对1234，得到4321。
+√
+
+练习44、输入一个整数，得到这个整数的位数
+√
+
+示例45、写一个函数，将一个整数的各位数字的按顺序打印出来
+
+方法1
+//递归法
+void show(int n) {
+/*举1234为例子
+n=1234,n>10,show(123)         printf(" 4")
+n=123, n>10,show(12)         printf(" 3");↑
+n=12,  n>10,show(1)       printf(" 2");↑
+n=1,   n<10,        printf("1");↑
+                  结束返回到上一次调用的地方
+*/
+  if (n < 10) {
+    printf("%d", n);
+  } else {
+    show(n / 10);
+    printf(" %d", n % 10);
+  }
+}
+√
+
+方法2
+//循环数组
+void show(int n) {
+  int a[10], i = 0;
+//反序录入
+  while (n) {
+    a[i++] = n % 10;
+    n /= 10;
+  }
+//倒序输出
+  for (int j = i-1; j >= 0; j--)
+    printf("%d ", a[j]);
+}
+√
+
+int main() {
+  int n;
+  while (~scanf("%d", &n)) {
+    show(n);
+    printf("\n");
+  }
+}
+√
+
+方法3
+void show(int n) { 
+  int k = 1, m = n;   
+  while (m > 10) {
+    k *= 10;
+    m /= 10;
+  }
+  while (n) {
+    printf("%d ", n / k);
+    n %= k;
+    k /= 10;
+  };
+}
+int main() {
+  int n;
+  while (~scanf("%d", &n)) {
+    show(n);
+    printf("\n");
+  }
+}
+
+
+练习45、输入一个整数，输出其二进制表示（用循环和递归两种方法）
+√
+
+刷题23、1的个数
+√
+
+刷题24、队花的烦恼一
+√
+
+示例46、输入一个整数，输出其十六进制形式
+方法1
+#include<stdio.h>
+int main() {
+  int n, a[100], k = 0;
+//十六进制：0-9对应0-9,10-15对应A-F
+  char s[] = "0123456789ABCDEF"; 
+  scanf("%d", &n);
+  while (n) {
+    a[k++] = n % 16;
+    n /= 16; 
+  } 
+  for(int i = k - 1; i >= 0; i--)
+    printf("%c", s[a[i]]);
+}
+√
+
+方法2
+#include<stdio.h>
+char c[] = "0123456789ABCDEF";
+void show(int n) {
+  if (n > 0) {
+    show(n / 16);
+    printf("%c", c[n % 16]);
+  }
+}
+int main() { 
+  int n;
+  while (~scanf("%d", &n)) {
+    show(n);
+    printf("\n");
+  }
+}
+√
+练习46、写一个递归函数，求n的阶乘
+√
+
+示例47、写一函数，求斐波那契（Fibonacci）数列的第n项。
+
+方法1
+int fib(int n) { 
+  int f1, f2, f;
+  if (n == 1 || n == 2) return 1;
+  f1 = f2 = 1;
+  for (int i = 3; i <= n; i++) {
+    f = f1 + f2;
+    f1 = f2;
+    f2 = f;
+  }
+  return f;
+}
+√
+方法2
+int f[100];
+int fib(int n) { 
+  f[1] = f[2] = 1;
+  for (int i = 3; i <= n; i++)
+    f[i] = f[i-1] + f[i-2];
+  return f[n];
+}
+√
+
+方法3
+int fib(int n) { 
+  if (n == 1 || n == 2) return 1;
+  return fib(n-1) + fib(n-2);
+}
+√
+
+练习47、台阶问题：有一阶梯有n级台阶，每次只能跨1级或2级，要跨上第n级，共有多少种走法。假设第一步是左脚。
+
+解：跨上第n级，可以是在跨上第n-1级的基础上再跨1级，也可以是在跨上第n-2级的基础上再跨2级，于是有：
+    f(n) = f(n-1) + f(n-2); 
+    f(1) = 1; f(2) = 2。
+    此题就变成了一道简单的斐波那契数列问题。
+
+
+刷题25、Fibonacci Again!
+√
+
+示例48、求两个数的最大公约数
+方法1
+int gcd(int m, int n) {
+  int t = m > n ? n : m;
+  while (1) {
+    if (m % t == 0 && n % t == 0) 
+      return t;
+    t--;
+  }  
+}
+或
+int gcd(int m, int n) {
+//min（m，n）表示两数中最小值。
+  for (int i = min(m, n); i >= 1; i--)
+    if (m % i == 0 && n % i == 0) 
+      return i;
+}
+√
+
+方法2
+int gcd(int m, int n) {
+  int s = 1;
+  for (int i = 2; i <= m && i <= n; i++) {
+    while (m % i == 0 && n % i == 0) {
+//后面两条是为了满足跳出循环的条件
+      s *= i;
+      m /= i;
+      n /= i;
+    }
+  }
+  return s;
+}
+√
+
+方法3
+int gcd(int m, int n) {
+  while (m != n) {
+    if (m > n)
+      m = m - n;
+    else
+      n = n - m; 
+  }
+  return m;
+}
+√
+
+方法4
+#include<stdio.h>
+int gcd(int m, int n) {
+  while (m != 0 && n != 0) {
+    if (m > n)
+      m = m % n;
+    else
+      n = n % m;
+  }
+  return m == 0 ? n : m;
+}
+√
+
+方法5
+int gcd(int m, int n) {
+  int k;
+  while (n != 0) {
+    k = m % n;
+    m = n;
+    n = k;
+  }
+  return m;
+}  
+√
+
+方法6	
+int gcd(int m, int n) {
+  int k;
+  while (k = m % n) {
+    m = n;
+    n = k;
+  }
+  return n;
+}
+√
+  	
+方法7
+int gcd(int m, int n) {
+  if (n == 0) return m;
+  return gcd(n, m % n);
+}
+√
+
+练习48、求三个数的最大公约数
+程序1
+#include <iostream>
+using namespace std;
+int main () {
+  int a, b, c;
+  while (cin >> a >> b >> c) {
+    int s = 1;
+    for (int i = 2; i <= a && i <= b && i <= c; i++) {
+      while (a % i == 0 && b % i == 0 && c % i == 0) {
+        s *= i;
+        a /= i;
+        b /= i;
+        c /= i;
+      }
+    }
+    cout << s << endl;
+  }
+}
+√
+
+程序2
+int main () {
+  int a, b, c;
+  while (cin >> a >> b >> c) {
+    cout << gcd(gcd(a, b), c) << endl;
+  }
+}
+√
+
+示例49、求两个数的最小公倍数
+方法1
+int lcm(int m, int n) {
+  int t = m > n ? m : n;
+  while (1) {
+    if (t % m == 0 && t % n == 0) 
+      return t;
+    t++;
+  }  
+}
+√
+
+方法2
+int lcm(int m, int n) {
+  if (m < n) swap(m, n);
+  int s = m;
+  while (s % n != 0) s += m;
+  return s;
+} 
+√
+
+方法3
+int lcm(int m, int n) {
+  return m * n / gcd(m, n);
+}
+√
+
+方法4
+int lcm(int m, int n) {
+  int k, t = m * n;
+  while (k = m % n) {
+    m = n;
+    n = k; 
+  }
+  return t / n;
+}
+√
+
+方法5
+int lcm(int m, int n) {
+  int s = 1;
+  for (int i = 2; i <= m && i <= n; i++) {
+    while (m % i == 0 || n % i == 0) {
+      s *= i;
+      if (m % i == 0) m /= i;
+      if (n % i == 0) n /= i;
+    }
+  }
+  s *= m * n;  
+}
+√
+
+练习49、求三个数的最小公倍数
+程序1
+#include <iostream>
+using namespace std;
+int main () {
+  int a, b, c;
+  while (cin >> a >> b >> c) {
+    int s = a;
+    while (s % b != 0 || s % c != 0) s += a;
+    cout << s << endl;
+  }
+}
+√
+
+程序2
+#include <iostream>
+using namespace std;
+int main () {
+  int a, b, c;
+  while (cin >> a >> b >> c) {
+    int s = 1;
+    for (int i = 2; i <= a && i <= b && i <= c; i++) {
+      while (a % i == 0 || b % i == 0 || c % i == 0) {
+        s *= i;
+        if (a % i == 0) a /= i;
+        if (b % i == 0) b /= i;
+        if (c % i == 0) c /= i;
+      }
+    }
+    s *= a * b * c;
+    cout << s << endl;
+  }
+}
+√
+
+程序3
+int main () {
+  int a, b, c;
+  while (cin >> a >> b >> c) {
+    cout << lcm(lcm(a, b), c) << endl;
+  }
+}
+√
+
+练习50、求1～n的最小公倍数
+#include <iostream>
+using namespace std;
+//可根据题目范围更改
+const int N = 1000;
+int a[N] = {0, 1};
+int main () {
+//将数字化为最简形式，除去多余的因子的形式
+1-9:1 2 3 2 5 1 7 2 3
+  for (int i = 2; i <= N; i++) {
+    a[i] = i;
+    for (int j = 1; j < i; j++)
+      if(a[i] % a[j] == 0) a[i] /= a[j];
+  }
+  int n;
+  while (cin >> n) {
+    int s = 1;
+//直接将化简后的数字（因子）乘起来即是最小公倍数
+    for (int i = 2; i <= n; i++) s *= a[i];
+    cout << s << endl;
+  }
+}
+√
+
